@@ -1,314 +1,135 @@
 # Arc Reactor Cloud Intelligence Engine
 
-A scroll-triggered feature section showcasing cloud infrastructure optimization through animated energy visualization. Built with professional frontend engineering patterns and modern web technologies.
+A scroll-triggered interactive feature section built for the Atomity Frontend Engineering Challenge.
 
-## Overview
+## Feature Chosen
 
-This implementation presents a futuristic "Arc Reactor" powered by multiple cloud sources (Amazon Web Services, Microsoft Azure, Google Cloud, On-Premise) converging into a central intelligence core. When the section enters the viewport, animated energy pulses flow from each source toward the reactor, which powers up and reveals cloud optimization metrics: cost reduction, resource efficiency, optimization score, and savings generated.
+I selected **Option B (0:45–0:55)** from the Atomity product video.
 
-## Architecture
+The original sequence showed multiple infrastructure sources converging into a centralized optimization layer. Instead of recreating the exact UI, I reinterpreted the concept as an **Arc Reactor Cloud Intelligence Engine**, where distributed cloud sources power a central intelligence core that surfaces optimization insights.
 
-### Folder Structure
+## Tech Stack
 
-```
+- Next.js 16
+- TypeScript
+- Framer Motion
+- TanStack Query
+- Tailwind CSS
+
+## Key Features
+
+- Scroll-triggered reveal animations
+- Animated energy flow between source nodes and reactor
+- Arc Reactor visualization with rotating rings and particles
+- Dynamic KPI cards with count-up animations
+- Public API integration using JSONPlaceholder
+- React Query caching and retry handling
+- Responsive layout for mobile, tablet, and desktop
+- Accessibility support including reduced-motion preferences
+
+## Project Structure
+
+```txt
 src/
 ├── components/
-│   ├── FeatureSection.tsx    # Main container & orchestration
-│   ├── CloudProvider.tsx      # Cloud provider endpoints (AWS, Azure, GCP, On-Prem)
-│   ├── ArcReactor.tsx         # Central reactor core with rings and particles
-│   ├── EnergyLine.tsx         # SVG connection lines with pulse animations
-│   └── MetricCard.tsx         # KPI metric cards with count-up animation
+│   ├── FeatureSection.tsx
+│   ├── CloudProvider.tsx
+│   ├── ArcReactor.tsx
+│   ├── EnergyLine.tsx
+│   └── MetricCard.tsx
 ├── hooks/
-│   └── useKpiData.ts          # React Query hooks for metric fetching from JSONPlaceholder
+│   └── useKpiData.ts
 ├── tokens/
-│   └── tokens.ts              # Design tokens (colors, spacing, radii, shadows) with CSS variables
-├── app/
-│   ├── layout.tsx             # Root layout with Query provider
-│   ├── page.tsx               # Entry point
-│   └── globals.css            # Global styles with CSS variable definitions
+│   └── tokens.ts
 ```
 
-### Design Decisions
+## Animation Approach
 
-**Component Separation**: Each visual element (nodes, lines, reactor, metrics) is isolated into focused components with clear responsibilities. This enables independent animation logic and easier testing.
+The experience is built around a simple visual narrative:
 
-**Intersection Observer**: Rather than continuous polling, the section uses the Intersection Observer API to detect viewport entry at 30% visibility threshold. This is efficient and works with native browser APIs.
-
-**Progressive Power Level**: The reactor doesn't instantly reach full power. It gradually increases over time (0.02 per frame initially, then 0.015 after 2 seconds), creating a sense of build-up and convergence.
-
-**No Hardcoded SVG Paths**: Rather than hand-rolling SVG coordinates, energy lines are computed mathematically from source positions to reactor. Hover states dynamically modify animation speeds.
-
-### Animation Decisions
-
-**Framer Motion Selection**: Used for spring-based animations throughout. Spring physics feel more organic than linear easing and require less tweaking.
-
-**Staggered Reveals**: Each source node, energy line, and metric card animates in sequence with calculated delays. This creates a choreographed entrance rather than simultaneous flash.
-
-**Continuous Effects**: The Arc Reactor has perpetual animations (rotating rings, orbiting particles) that run independently from the reveal state. Hover on source nodes increases energy line stroke width and pulse speed.
-
-**Motion Preferences**: The component respects `prefers-reduced-motion` through Framer Motion's built-in support, disabling animations for accessibility.
-
-### Data Fetching & Caching
-
-**TanStack Query Integration**: The `useKpiData` hook fetches from JSONPlaceholder (public API) and transforms posts into cloud infrastructure metrics.
-
-- **API Source**: `https://jsonplaceholder.typicode.com/posts` - Public, no-auth required
-- **Stale Time**: 5 minutes—data is considered fresh for this duration
-- **Cache (GC Time)**: 10 minutes—cache persists even after component unmounts
-- **Retry Logic**: 2 automatic retries on failure
-
-The metrics are computed dynamically from API data (post count → throughput, userId → provider variation) demonstrating real-world transformation logic. Each cloud provider fetches from a different user endpoint, showing realistic metric variation.
-
-### Design System (Tokens)
-
-All design tokens follow a **CSS variable-first approach** defined in `src/tokens/tokens.ts`:
-
-```typescript
-// tokens.ts - References CSS variables
-colors: {
-  primary: 'var(--color-primary)',
-  reactorCore: 'var(--color-reactor-core)',
-  background: 'var(--color-background)',
-}
-
-// globals.css - Define actual values
-:root {
-  --color-primary: #00D9FF;
-  --color-reactor-core: #FFD700;
-  --color-background: #0A0E27;
-}
+```txt
+Cloud Sources
+      ↓
+ Energy Flow
+      ↓
+  Arc Reactor
+      ↓
+ Optimization Metrics
 ```
 
-**Token Structure**:
-- **Colors**: Primary cyan, secondary blue, gold reactor core, orange glow, dark navy background
-- **Spacing**: 8-step scale from xs (0.25rem) to 3xl (4rem)
-- **Radii**: sm, md, lg, xl for component borders
-- **Shadows**: Standard shadows plus custom glow effects for reactor and energy
-- **Animation**: Named durations (fast, base, slow) and spring physics presets
+Framer Motion is used for staggered entrances, hover interactions, and smooth spring-based transitions. Energy lines and reactor effects remain active after the initial reveal to keep the section feeling alive.
 
-This architecture enables runtime theme changes, better maintainability, and cleaner CSS by centralizing all design decisions.
+## Data Fetching & Caching
 
-### Modern CSS Features
+KPI data is fetched from:
 
-The implementation showcases cutting-edge CSS standards with explicit usage:
-
-**1. `clamp()` Function** - Fluid responsive typography
-```css
-font-size: clamp(1rem, 2vw, 3rem);  /* Min, preferred, max */
-padding: clamp(1rem, 5vw, 2rem);
+```txt
+https://jsonplaceholder.typicode.com/posts
 ```
-Used in tokens and throughout component styling for seamless scaling.
 
-**2. `color-mix()` Operator** - Dynamic color blending
-```css
-background-color: color-mix(in srgb, #00D9FF 15%, transparent);
-box-shadow: inset 0 0 20px color-mix(in srgb, #22c55e 10%, transparent);
+TanStack Query is used to handle:
+
+- Data fetching
+- Loading and error states
+- Automatic retries
+- 5-minute cache duration
+
+This prevents unnecessary network requests and provides instant data on revisit.
+
+## Design System
+
+A token-based design system is used throughout the project.
+
+Tokens are defined in:
+
+```txt
+src/tokens/tokens.ts
 ```
-Applied in MetricCard for dynamic accent colors based on metric type.
 
-**3. `:has()` Selector** - Conditional parent styling
-```css
-.metric-card:has(.progress-bar:hover) {
-  background-color: color-mix(in oklch, oklch(0.205 0 0) 15%, transparent);
-  border-color: oklch(0.488 0.243 264.376);
-}
-```
-Enables cards to respond when internal progress bars are hovered.
+and reference CSS variables from `globals.css` to keep colors, spacing, shadows, and animation values centralized.
 
-**4. Container Queries** - Container-aware responsive design
-```css
-@container (min-width: 400px) {
-  .container-adaptive {
-    font-size: clamp(0.875rem, 2.5vw, 1rem);
-  }
-}
-```
-Adapts layout based on container width, not viewport.
+## Modern CSS Features
 
-**5. Logical Properties** - i18n-friendly spacing
-```css
-padding-inline: clamp(1rem, 5vw, 2rem);  /* Left/right in RTL/LTR */
-padding-block: clamp(0.75rem, 3vw, 1.5rem);  /* Top/bottom */
-margin-inline-start: 0;
-```
-Supports right-to-left languages automatically.
+The project uses several modern CSS capabilities:
 
-**6. `prefers-reduced-motion`** - Accessibility support
-```css
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; }
-}
-```
-Respects user motion preferences across all animations.
+- `clamp()` for fluid typography
+- `color-mix()` for dynamic glow effects
+- `:has()` for contextual styling
+- Container Queries
+- Logical Properties
+- `prefers-reduced-motion`
 
-## Technical Stack
+## Tradeoffs
 
-- **Next.js 16**: App Router with React 19
-- **TypeScript**: Full type safety across components
-- **Tailwind CSS 4**: Utility-first styling with logical properties
-- **Framer Motion**: Spring-based animations and gesture handling
-- **TanStack Query v5**: Server state management and caching
+Given the challenge time limit, I focused on building a single polished interactive section rather than a larger landing page.
 
-## Features Implemented
+Priority was given to:
 
-### Scroll-Triggered Reveal
-- Detects when section enters viewport (30% threshold)
-- Cascades node appearances with staggered timing
-- Energy lines draw and animate after nodes appear
+- Animation quality
+- Component architecture
+- Data handling
+- Responsiveness
+- Accessibility
 
-### Arc Reactor Visualization
-- Three concentric rotating rings (different speeds, alternating directions)
-- 20 orbiting particles with opacity pulses
-- Pulsing golden core with internal spark animation
-- Glow intensity tied to power level
+## Future Improvements
 
-### Source Node Interactions
-- Each cloud source has a glowing border with inner rotating ring
-- Hover state strengthens glow and increases particle emission speed
-- Smooth spring-based scale transitions
+With additional time I would:
 
-### Energy Connection Lines
-- SVG lines with animated dash-offset for flowing effect
-- Gradient coloring from cyan → blue
-- Pulse particles travel along each line toward reactor
-- Stroke width increases on hover
+- Add configurable source nodes
+- Introduce alternative reactor themes
+- Add richer energy routing interactions
+- Connect to real cloud monitoring data
+- Explore WebGL-based visual effects
 
-### KPI Metrics
-- **Cost Reduction**: Cloud optimization savings percentage
-- **Resource Efficiency**: Percentage of resources optimally allocated
-- **Optimization Score**: Overall cloud optimization rating (0-100)
-- **Savings Generated**: Cumulative financial savings percentage
-- Smooth count-up animation from 0 to final value (2 second duration)
-- Progress bar visualization for each metric
-- Hover scale effect with color-mix() blend effects
-- Dynamically computed from JSONPlaceholder API data
-
-## Responsive Design
-
-- **Mobile**: Single-column metric grid, scaled reactor visualization
-- **Tablet**: Two-column metric grid, responsive source positioning
-- **Desktop**: Full four-metric grid, maximum visualization size
-
-Uses `clamp()` for fluid typography scaling and `@media` queries for metric grid adjustment.
-
-## Accessibility Features
-
-- Semantic HTML with proper heading hierarchy
-- ARIA labels on interactive elements
-- Keyboard navigation support (focus states inherit from Tailwind)
-- `prefers-reduced-motion` support via Framer Motion
-- Color contrast meets WCAG AA standards
-
-## Performance Optimizations
-
-- **RequestAnimationFrame**: Used for custom animation loops (dash offset animation)
-- **Lazy Query Loading**: KPI data only fetches once on component mount
-- **CSS Variables**: Enables efficient theme changes without DOM manipulation
-- **Container Queries**: Responsive breakpoints don't require media query overhead where possible
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm (or npm/yarn)
-
-### Installation
+## Run Locally
 
 ```bash
-git clone <repository>
-cd arc-reactor
-pnpm install
+npm install
+npm run dev
 ```
 
-### Development
+Open:
 
-```bash
-pnpm dev
+```txt
+http://localhost:3000
 ```
-
-Navigate to `http://localhost:3000`. Scroll to see the Arc Reactor section animate into view.
-
-### Build
-
-```bash
-pnpm build
-pnpm start
-```
-
-### Deployment to Vercel
-
-The easiest way to deploy this Next.js application:
-
-1. **Push to GitHub** (if not already):
-   ```bash
-   git push origin main
-   ```
-
-2. **Deploy via Vercel Dashboard**:
-   - Go to [vercel.com](https://vercel.com)
-   - Click "Add New Project"
-   - Import your GitHub repository
-   - Framework preset: Next.js (auto-detected)
-   - Click "Deploy"
-
-3. **Automatic Deployments**:
-   - Every push to main automatically deploys
-   - Preview URLs for pull requests
-   - Environment variables can be set in project settings
-
-**Result**: Your project will be live at `https://your-project-name.vercel.app`
-
-### Docker Deployment
-
-For self-hosted deployments:
-
-```bash
-docker build -t arc-reactor .
-docker run -p 3000:3000 arc-reactor
-```
-
-## Customization
-
-### Change Colors
-
-Edit `src/tokens/tokens.ts` and update the colors object. All components use CSS variables, so changes propagate automatically.
-
-### Adjust Animation Timing
-
-Framer Motion `transition` props throughout components control durations. Increase `duration` values to slow down, decrease to speed up.
-
-### Modify KPI Data
-
-The `useKpiData` hook in `src/hooks/useKpiData.ts` calls dummyjson API. Replace the `fetch()` call with your own API endpoint.
-
-### Adjust Scroll Trigger Threshold
-
-In `FeatureSection.tsx`, the Intersection Observer threshold is set to `0.3` (30%). Change this value to trigger earlier or later.
-
-## Browser Support
-
-- Chrome/Edge: Full support
-- Firefox: Full support
-- Safari: Full support (14+)
-- Mobile browsers: Full support
-
-## Future Enhancements
-
-- Add audio feedback on power-up completion
-- Implement configurable source nodes (allow 2-8 instead of fixed 4)
-- Add "drain mode" animation for power decrease
-- Create preset themes (dark, neon, corporate)
-- Add WebGL version for 3D reactor visualization
-
-## Notes
-
-This implementation prioritizes **handcrafted quality** over generic patterns:
-
-- Components use meaningful names reflecting their purpose
-- Animation logic is explicit and auditable
-- No utility abstractions hiding implementation details
-- CSS uses semantic tokens rather than magic numbers
-- Comments only where intent isn't obvious from code
-
-The result is production-ready code that an experienced frontend engineer would write—clear, maintainable, and visually compelling.
